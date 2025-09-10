@@ -1,0 +1,1 @@
+A little tool using [tesseract.js](https://github.com/naptha/tesseract.js) to take a template image and convert it into editable svg. This was created with the intention of targetting label templates. This project also aims to be able to optionally dynamically replace variable information (i.e. barcode information) with YAML supplemented dynamic data. 
