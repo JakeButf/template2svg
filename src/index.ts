@@ -27,7 +27,7 @@ const buildSvgFromBoxes = (boxes: WordBox[]) => {
 			_: box.text
 		});
 	}
-	let builder = new Builder();
+	let builder = new Builder({ headless: true });
 	let xml = builder.buildObject(svgObj);
 	console.log(xml);
 }
