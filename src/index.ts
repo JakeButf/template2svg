@@ -21,23 +21,30 @@ const buildSvgFromBoxes = (boxes: WordBox[]) => {
 		}
 	}
 
-	for(const box of boxes) {
+	for (const box of boxes) {
 		svgObj.svg.text[0]?.tspan.push({
-			$: {x: box.bbox.x0.toString(), y: box.bbox.y0.toString()},
+			$: { x: box.bbox.x0.toString(), y: box.bbox.y0.toString() },
 			_: box.text
 		});
 	}
 	let builder = new Builder({ headless: true });
 	let xml = builder.buildObject(svgObj);
-	console.log(xml);
+	//console.log(xml);
+	fs.writeFile("output.xml", xml, (err) => {
+		if (err) {
+			console.error("Error writing xml file:", err);
+		} else {
+			console.log("XML File written.");
+		}
+	});
 }
 
 (async () => {
 	const imageBuffer = fs.readFileSync('example_template.png'); //TODO: allow input 
 
 	const worker = await createWorker('eng');
-	const { data } = await worker.recognize(imageBuffer, {}, {blocks: true});
-	
+	const { data } = await worker.recognize(imageBuffer, {}, { blocks: true });
+
 	const boxResults: WordBox[] = []
 
 	if (data.blocks?.[0]) {
@@ -47,10 +54,10 @@ const buildSvgFromBoxes = (boxes: WordBox[]) => {
 	}
 
 	try {
-		for(const blocks of data.blocks || []) {
-			for(const paragraphs of blocks.paragraphs || []) {
-				for(const lines of paragraphs.lines || []) {
-					let wordBox: WordBox = {text: '', bbox: {x0: 0, y0: 0, x1: 0, y1: 0}, confidence: 0};
+		for (const blocks of data.blocks || []) {
+			for (const paragraphs of blocks.paragraphs || []) {
+				for (const lines of paragraphs.lines || []) {
+					let wordBox: WordBox = { text: '', bbox: { x0: 0, y0: 0, x1: 0, y1: 0 }, confidence: 0 };
 					wordBox.bbox = lines.bbox as BBox;
 					wordBox.text = lines.text;
 					wordBox.confidence = lines.confidence;
